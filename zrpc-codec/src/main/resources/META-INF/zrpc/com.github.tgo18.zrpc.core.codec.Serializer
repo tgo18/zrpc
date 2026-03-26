@@ -1,0 +1,4 @@
+json=com.github.tgo18.zrpc.codec.JsonSerializer
+protobuf=com.github.tgo18.zrpc.codec.ProtobufSerializer
+hessian=com.github.tgo18.zrpc.codec.HessianSerializer
+jdk=com.github.tgo18.zrpc.codec.JdkSerializer

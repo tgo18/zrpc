@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.tgo18</groupId>
+        <artifactId>zrpc-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>zrpc-transport</artifactId>
+    <name>zrpc-transport</name>
+    <description>zRPC transport layer: Netty TCP, HTTP/2, gRPC protocol support</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.tgo18</groupId>
+            <artifactId>zrpc-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tgo18</groupId>
+            <artifactId>zrpc-codec</artifactId>
+        </dependency>
+
+        <!-- Netty full -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
+        <!-- gRPC core (stub-free: just transport + codec) -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
+    </dependencies>
+</project>

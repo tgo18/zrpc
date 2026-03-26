@@ -1,0 +1,33 @@
+zrpc:
+  application:
+    name: greeter-example
+
+  protocol:
+    name: zrpc           # zrpc | grpc | http2
+    port: 20880
+    serialization: json
+
+  registry:
+    type: memory         # memory | zookeeper | nacos
+    address: ""          # e.g. 127.0.0.1:2181 for ZooKeeper
+
+  consumer:
+    timeout: 3000
+    retries: 2
+    loadbalance: roundrobin
+
+---
+spring:
+  config:
+    activate:
+      on-profile: provider
+
+# Provider: start on port 20880
+
+---
+spring:
+  config:
+    activate:
+      on-profile: consumer
+
+# Consumer: connect to provider at localhost:20880

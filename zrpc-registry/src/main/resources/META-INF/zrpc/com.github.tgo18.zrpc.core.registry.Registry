@@ -1,0 +1,3 @@
+memory=com.github.tgo18.zrpc.registry.memory.InMemoryRegistry
+zookeeper=com.github.tgo18.zrpc.registry.zookeeper.ZookeeperRegistry
+nacos=com.github.tgo18.zrpc.registry.nacos.NacosRegistry

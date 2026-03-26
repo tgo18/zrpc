@@ -1,0 +1,4 @@
+roundrobin=com.github.tgo18.zrpc.loadbalance.RoundRobinLoadBalance
+random=com.github.tgo18.zrpc.loadbalance.RandomLoadBalance
+consistenthash=com.github.tgo18.zrpc.loadbalance.ConsistentHashLoadBalance
+leastactive=com.github.tgo18.zrpc.loadbalance.LeastActiveLoadBalance
