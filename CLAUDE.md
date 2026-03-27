@@ -27,7 +27,8 @@ zrpc/
 ├── zrpc-loadbalance/            # Load balancing: RoundRobin, Random, ConsistentHash, LeastActive
 ├── zrpc-filter/                 # Built-in filters: AccessLog, Metrics, Timeout, Exception
 ├── zrpc-spring-boot-starter/    # Spring Boot auto-configuration
-└── zrpc-example/                # Usage examples (provider + consumer)
+├── zrpc-example/                # Usage examples (provider + consumer)
+└── zrpc-admin/                  # Web-based admin console (port 7070)
 ```
 
 **Dependency order** (each module only depends on modules above it):
@@ -40,6 +41,7 @@ zrpc-core
   └── zrpc-filter
        └── zrpc-spring-boot-starter (depends on all above)
                 └── zrpc-example
+                └── zrpc-admin (depends on zrpc-spring-boot-starter)
 ```
 
 ---
@@ -292,6 +294,61 @@ private FooService fooService;
 | `zrpc-transport/.../common/ZRpcMessage.java` | Wire frame definition |
 | `zrpc-spring-boot-starter/.../bean/RegistryDirectoryInvoker.java` | Cluster + registry-aware invoker |
 | `zrpc-spring-boot-starter/.../config/ZRpcProperties.java` | All Spring Boot config properties |
+| `zrpc-core/.../metrics/MetricsStore.java` | Global in-process metrics registry (read by admin) |
+| `zrpc-core/.../metrics/MetricEntry.java` | Per-(service,method) stats: QPS, latency, error rate |
+| `zrpc-admin/.../service/AdminService.java` | Admin business logic: dashboard, providers, metrics |
+| `zrpc-admin/.../controller/AdminController.java` | REST API for admin console |
+| `zrpc-admin/src/main/resources/static/` | Admin SPA (index.html + css/admin.css + js/admin.js) |
+
+---
+
+## Admin Console
+
+A standalone Spring Boot web application (`zrpc-admin`) provides a dashboard for service governance.
+
+### Starting
+
+```bash
+mvn spring-boot:run -pl zrpc-admin
+# Default URL: http://localhost:7070
+```
+
+### Pages
+
+| Page | Description |
+|---|---|
+| Dashboard | Summary stats: services, providers, QPS, avg latency, error rate, registry status |
+| Services | All registered service interfaces with aggregated call metrics |
+| Providers | Provider nodes with enable/disable toggle and weight adjustment |
+| Metrics | Per-(service, method) invocation statistics |
+
+### REST API
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/dashboard` | Aggregate stats |
+| GET | `/api/services` | All service summaries |
+| GET | `/api/services/{name}` | One service |
+| GET | `/api/providers` | All provider nodes |
+| PUT | `/api/providers/{id}/enabled` | Enable / disable a provider |
+| PUT | `/api/providers/{id}/weight` | Set provider weight |
+| GET | `/api/metrics` | All (service, method) metrics |
+| GET | `/api/metrics/{service}` | Metrics for one service |
+
+### Data Flow
+
+```
+MetricsFilter.invoke()
+    └── MetricsStore.record(service, method, latencyMs, success)
+            └── ConcurrentHashMap<"svc#method", MetricEntry>
+                    └── AdminController reads via AdminService
+```
+
+### Notes
+
+- `MetricsStore` is in-process; it is populated only when the provider and admin run in the **same JVM** (e.g., `zrpc-example` provider with `zrpc-admin` excluded, or a custom all-in-one deployment).
+- For distributed deployments, replace `MetricsStore` with a remote time-series store (Prometheus + Grafana).
+- Provider enable/disable works by deregistering/re-registering the URL from the registry; it takes effect on the next load-balance selection cycle.
 
 ---
 

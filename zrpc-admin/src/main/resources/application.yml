@@ -1,0 +1,17 @@
+server:
+  port: 7070
+
+spring:
+  application:
+    name: zrpc-admin
+
+zrpc:
+  application:
+    name: zrpc-admin
+  registry:
+    type: memory
+    address: ""
+
+logging:
+  level:
+    com.github.tgo18.zrpc: INFO

@@ -21,6 +21,7 @@
         <module>zrpc-filter</module>
         <module>zrpc-spring-boot-starter</module>
         <module>zrpc-example</module>
+        <module>zrpc-admin</module>
     </modules>
 
     <properties>
